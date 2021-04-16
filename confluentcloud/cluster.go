@@ -145,7 +145,7 @@ func (c *Client) DeleteCluster(id, account_id string) error {
 		SetBody(
 			map[string]interface{}{
 				"cluster": map[string]interface{}{
-					"id": id,
+					"id":        id,
 					"accountId": account_id,
 				},
 			},

@@ -21,6 +21,7 @@ type ServiceAccountResponse struct {
 type ServiceAccountCreateRequestW struct {
 	ServiceAccount *ServiceAccountCreateRequest `json:"user"`
 }
+
 type ServiceAccountCreateRequest struct {
 	Name        string `json:"service_name"`
 	Description string `json:"service_description"`
@@ -29,6 +30,13 @@ type ServiceAccountDeleteRequestW struct {
 	ServiceAccount ServiceAccountDeleteRequest `json:"user"`
 }
 type ServiceAccountDeleteRequest struct {
+	ID int `json:"id"`
+}
+
+type ServiceAccountGetRequestW struct {
+	ServiceAccount ServiceAccountGetRequest `json:"user"`
+}
+type ServiceAccountGetRequest struct {
 	ID int `json:"id"`
 }
 
@@ -54,6 +62,32 @@ func (c *Client) CreateServiceAccount(request *ServiceAccountCreateRequest) (*Se
 		return nil, fmt.Errorf("service_accounts: %s", response.Error().(*ErrorResponse).Error.Message)
 	}
 
+	return &response.Result().(*ServiceAccountResponse).ServiceAccount, nil
+}
+
+func (c *Client) ReadServiceAccount(id int) (*ServiceAccount, error) {
+	rel, err := url.Parse(fmt.Sprintf("service_accounts/%d", id))
+	if err != nil {
+		return nil, err
+	}
+
+	u := c.BaseURL.ResolveReference(rel)
+
+	request := ServiceAccountGetRequest{
+		ID: id,
+	}
+	response, err := c.NewRequest().
+		SetBody(&ServiceAccountGetRequestW{ServiceAccount: request}).
+		SetResult(&ServiceAccountResponse{}).
+		SetError(&ErrorResponse{}).
+		Get(u.String())
+
+	if err != nil {
+		return nil, err
+	}
+	if response.IsError() {
+		return nil, fmt.Errorf("service_accounts: %s", response.Error().(*ErrorResponse).Error.Message)
+	}
 	return &response.Result().(*ServiceAccountResponse).ServiceAccount, nil
 }
 

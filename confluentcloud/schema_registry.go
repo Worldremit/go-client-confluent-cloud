@@ -24,12 +24,12 @@ type SchemaRegistry struct {
 }
 
 type SchemaRegistryResponse struct {
-	Error interface{}         `json:"error"`
+	Error    interface{}      `json:"error"`
 	Clusters []SchemaRegistry `json:"clusters"`
 }
 
 type SchemaRegistryCreateResponse struct {
-	Error interface{}      `json:"error"`
+	Error   interface{}    `json:"error"`
 	Cluster SchemaRegistry `json:"cluster"`
 }
 
@@ -38,11 +38,11 @@ type SchemaRegistryCreateRequest struct {
 }
 
 type SchemaRegistryRequest struct {
-	AccountID           string `json:"account_id"`
-	KafkaClusterID      string `json:"kafka_cluster_id"`
-	Location            string `json:"location"`
-	Name                string `json:"name"`
-	ServiceProvider     string `json:"service_provider"`
+	AccountID       string `json:"account_id"`
+	KafkaClusterID  string `json:"kafka_cluster_id"`
+	Location        string `json:"location"`
+	Name            string `json:"name"`
+	ServiceProvider string `json:"service_provider"`
 }
 
 func (c *Client) GetSchemaRegistry(id string) (*SchemaRegistry, error) {
@@ -68,7 +68,7 @@ func (c *Client) GetSchemaRegistry(id string) (*SchemaRegistry, error) {
 
 	schema_clusters := response.Result().(*SchemaRegistryResponse).Clusters
 
-	for i:= 0; i < len(schema_clusters); i++ {
+	for i := 0; i < len(schema_clusters); i++ {
 		if schema_clusters[i].Name == schemaRegistryName {
 			return &schema_clusters[i], nil
 		}
@@ -106,10 +106,10 @@ func (c *Client) CreateSchemaRegistry(accountID string, location string, service
 	u := c.BaseURL.ResolveReference(rel)
 
 	request := SchemaRegistryRequest{
-		KafkaClusterID: "",
-		Name: schemaRegistryName,
-		AccountID: accountID,
-		Location: location,
+		KafkaClusterID:  "",
+		Name:            schemaRegistryName,
+		AccountID:       accountID,
+		Location:        location,
 		ServiceProvider: serviceProvider,
 	}
 
